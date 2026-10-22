@@ -2,17 +2,24 @@
 
 my lab bench for the Pollen Robotics Microduck, a small two-legged robot. everything here ran in **simulation only**. my duck is on pre-order and none of this has touched a real robot yet.
 
-three things live here:
+four things live here:
 
 1. **a Hermes Agent tool that drives the duck with plain sentences** (`hermes/`)
 2. **the training and proof-take tools** I use to train my own policies on Pollen's open training code (`tools/`, `training/`)
 3. **six patches to Pollen's rough-terrain training** that fix how height and terrain difficulty are measured (`patches/`)
+4. **my own training conditions**: five forks of Pollen's walk task that train it on a step, a slippery floor, harder shoves, gentle hills, or all of the first three at once (`conditions/`)
 
 the trained policies are on Hugging Face, one installable repo per skill, plus a dataset with every run's reward curve and proof takes:
 
 - collection: https://huggingface.co/collections/witcheer/microduck-skill-tree-sim-only-6ab195da0c0b293bdccc6d34
 - run log dataset: https://huggingface.co/datasets/witcheer/microduck-skill-tree
-- policies: [walk-flat](https://huggingface.co/witcheer/microduck-walk-flat), [walk-rough](https://huggingface.co/witcheer/microduck-walk-rough), [walk-recover](https://huggingface.co/witcheer/microduck-walk-recover), [walk-recover-rough](https://huggingface.co/witcheer/microduck-walk-recover-rough), [standup](https://huggingface.co/witcheer/microduck-standup), [roulade](https://huggingface.co/witcheer/microduck-roulade), [kick-right](https://huggingface.co/witcheer/microduck-kick-right)
+- policies: [walk-flat](https://huggingface.co/witcheer/microduck-walk-flat), [walk-rough](https://huggingface.co/witcheer/microduck-walk-rough), [walk-recover](https://huggingface.co/witcheer/microduck-walk-recover), [walk-recover-rough](https://huggingface.co/witcheer/microduck-walk-recover-rough), [standup](https://huggingface.co/witcheer/microduck-standup), [roulade](https://huggingface.co/witcheer/microduck-roulade), [kick-right](https://huggingface.co/witcheer/microduck-kick-right), [walk-getup](https://huggingface.co/witcheer/microduck-walk-getup)
+- walks trained under my own conditions (`conditions/`), each simulation only and not yet tested on a real Microduck:
+  - [walk-step](https://huggingface.co/witcheer/microduck-walk-step): walk-flat v2 retrained on a floor with single 10 to 25 mm steps. sim only.
+  - [walk-slip](https://huggingface.co/witcheer/microduck-walk-slip): walk-flat v2 retrained with foot friction down to 0.2, a slippery floor. sim only.
+  - [walk-slope](https://huggingface.co/witcheer/microduck-walk-slope): walk-flat v2 retrained on gentle hills, up to 0.15 rise per run. sim only.
+  - [walk-mix](https://huggingface.co/witcheer/microduck-walk-mix): walk-step retrained on the step floor, slippery feet and doubled shoves at once. sim only.
+  - walk-push (doubled training shoves) is trained but not on the Hub yet; its fork is in `conditions/` because walk-mix builds on it.
 
 each model card carries its own training numbers, proof-take results and limits.
 
@@ -38,7 +45,7 @@ the client refuses speeds outside the range the walking policy was trained on (`
 
 the policies were trained with Pollen's [microduck_rl](https://github.com/pollen-robotics/microduck_rl) (mjlab + rsl_rl) on one GPU, one Pollen task id per skill. `training/README.md` has the exact resume, export and publish commands.
 
-- `tools/headless_play.py`: records any checkpoint of any task to mp4 over ssh, no display. adds camera flags, forced spawn states (`--spawn face_up|face_down|sitting|standing`, plus Roulade's own spawn event), `--episode-s`, 0.1 s sampling (`--log-every 5`) and a `RESET at t=` line whenever the env resets mid-clip. copy it into your microduck_rl checkout and run it with `uv run python`.
+- `tools/headless_play.py`: records any checkpoint of any task to mp4 over ssh, no display. adds camera flags, forced spawn states (`--spawn face_up|face_down|sitting|standing`, plus Roulade's own spawn event), `--episode-s`, 0.1 s sampling (`--log-every 5`) and a `RESET at t=` line whenever the env resets mid-clip. for the walk forks it also takes `--cmd-vx V` (a fixed straight-ahead command, so a take actually reaches the step or the hill) and `--no-bounds` (drops the out-of-terrain termination a generated floor brings, which otherwise resets an upright duck near the grid edge). copy it into your microduck_rl checkout and run it with `uv run python`.
 - `tools/proof-verdicts.py`, `tools/take-verdicts.py`: score a folder of take logs from the logged trunk height and body-frame gravity (rise time, falls, resets), not from looking at frames.
 - `tools/onnx2ckpt.py`: rebuilds an rsl_rl checkpoint from one of Pollen's shipped ONNX policies, so it can be played in the training env or used as a distillation expert. it prints the max difference against onnxruntime, which should be about 1e-5.
 
@@ -70,6 +77,10 @@ python3 patches/terrain_curriculum_mode_patch.py
 - `terrain_demote_arms_patch.py`: logging only, splits the demote rate by which rule fired.
 
 each writes a `*.bak-*` backup on first run and refuses to run twice. to start over, `git checkout` `mdp.py` and `microduck_velocity_env_cfg.py` and run the chain again. they trained my walk-recover-rough policy on Pollen's `main` at 53b8971. on their `soft_carpet` branch at 695f3b7 I compared the task configs before and after: the flat VelStand tasks are identical, and the rough one changes only in the terrain curriculum.
+
+## 4. my own training conditions
+
+`conditions/` holds five task forks of Pollen's `Mjlab-Velocity-Flat-Backlash-MicroDuck`, the walk with ±1° of gear play per servo. each changes what the walk trains on and nothing else: a single step (`Step`), a slippery floor (`Slip`), doubled shoves (`Push`), gentle hills (`Slope`), and step + slip + push at once (`Mix`, which imports the other three). each registers with one appended import line in `tasks/__init__.py`; `conditions/README.md` has the commands, which forks need `patches/ground_height_patch.py`, and the environment variables I use to force the hardest case in proof takes. the results per policy are on the model cards above, simulation only.
 
 ## credits and licence
 

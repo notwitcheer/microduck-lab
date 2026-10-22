@@ -5,7 +5,7 @@ command_manager.create_gui) and `--viewer native` needs an X11 DISPLAY. This wra
 swaps the viewer class for a plain step loop; the VideoRecorder that `play` already
 wraps around the env writes `<ckpt dir>/videos/play/rl-video-step-0.mp4`.
 
-usage (from ~/Pollen/microduck_rl, MUJOCO_GL=egl):
+usage (from your microduck_rl checkout, MUJOCO_GL=egl):
   uv run python headless_play.py <task> --checkpoint-file <model_N.pt> --num-envs 1 \
       --video True --video-length 600 [--video-width 1280 --video-height 720] [--steps N]
 `--steps` (default video-length + 10), `--cam-world x,y,z|auto` (fixed camera looking at that world point instead of tracking the trunk,
@@ -58,8 +58,20 @@ no_push = "--no-push" in argv
 # leaves it (found 2026-09-29 by frame check): --spawn-offset D moves the reset x range to (D, D) m from the origin,
 # onto the rough part. every sample line also prints r= (planar distance from the env origin) so it can be verified.
 spawn_offset = take("--spawn-offset", None, float)
+# velocity takes play random twist commands (+-0.4 m/s, turns, standing envs), so a step/terrain verdict can spend a whole
+# take near the spawn (found 2026-10-14: v2 control take on the 09z3 step env stayed within r 0.73 m before a reset,
+# platform edge at 0.75 m). --cmd-vx V fixes the twist command to straight ahead at V m/s (lin_vel_y 0, ang_vel_z 0).
+cmd_vx = take("--cmd-vx", None, float)
+# generator-floor velocity forks inherit mjlab's out_of_terrain_bounds (a no-op on the maker's plane): it truncates once the
+# root leaves the num_rows x num_cols tile footprint minus 0.3 m, the 20 m border not counted. a 1-env play take lands in
+# an EDGE column (found 2026-10-14 on the 09z5 slope env: root y -18.5 on a 40 m grid, so ~1.7 m of walking in -y ends
+# the episode with the duck upright; the 09z3 step takes had the same spawn). it prints as a RESET line and scores as a
+# fall. --no-bounds drops that termination for the take (the duck walks on onto the flat border).
+no_bounds = "--no-bounds" in argv
 if no_push:
     argv.remove("--no-push")
+if no_bounds:
+    argv.remove("--no-bounds")
 if steps is None:
     steps = 610
     if "--video-length" in argv:
@@ -215,9 +227,21 @@ def _env_with_camera(cfg, **kw):
         pr["x"] = (spawn_offset, spawn_offset)
         pr["y"] = (-0.05, 0.05)
         print(f"[headless_play] spawn offset: x={spawn_offset} m from the env origin", flush=True)
+    if cmd_vx is not None:
+        tw = cfg.commands["twist"]
+        tw.ranges.lin_vel_x = (cmd_vx, cmd_vx)
+        tw.ranges.lin_vel_y = (0.0, 0.0)
+        tw.ranges.ang_vel_z = (0.0, 0.0)
+        for k in ("rel_standing_envs", "rel_turn_in_place_envs", "rel_heading_envs"):
+            if hasattr(tw, k):
+                setattr(tw, k, 0.0)
+        print(f"[headless_play] twist command fixed: vx={cmd_vx} m/s, vy 0, wz 0", flush=True)
     if no_push:
         dropped = cfg.events.pop("push_robot", None) if isinstance(cfg.events, dict) else None
         print(f"[headless_play] no-push: push_robot {'dropped' if dropped is not None else 'not present'}", flush=True)
+    if no_bounds:
+        dropped = cfg.terminations.pop("out_of_terrain_bounds", None) if isinstance(cfg.terminations, dict) else None
+        print(f"[headless_play] no-bounds: out_of_terrain_bounds {'dropped' if dropped is not None else 'not present'}", flush=True)
     if terrain_level is not None:
         gen = cfg.scene.terrain.terrain_generator
         if gen is None:
