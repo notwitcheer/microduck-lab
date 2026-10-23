@@ -1,0 +1,39 @@
+# 09z8 stairs staging results (as run on capsule 2026-10-23 18:00-18:25 CEST; the proof-item e2e used n=1 test takes, its VERDICT line is meaningless).
+# seed: walk-mixslope duckvelmixslope 2026-10-22_14-18-58 model_16000, md5 82e6979de127e064b465cc76141c600a (both copies); probe 2.35 s/it mean of 46 (steady 2.30-2.35), card peak 7,762 MiB.
+## install (stairs-install-2026-10-23)
+lines before 14 after 14
+other reprs identical: yes
+## profile check (ray-cast, difficulty 1.0 = 25 mm riser, 0.0 = 10 mm)
+PROF stairs2     diff 1.0 origin_z 50.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 50), (25.0, 25), (50.0, 126)] | risers 2 | centre 50.0 mm
+PROF stairs2     diff 0.0 origin_z 20.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 50), (10.0, 25), (20.0, 126)] | risers 2 | centre 20.0 mm
+PROF stairs3     diff 1.0 origin_z 75.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 50), (25.0, 25), (50.0, 25), (75.0, 101)] | risers 3 | centre 75.0 mm
+PROF stairs3     diff 0.0 origin_z 30.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 50), (10.0, 25), (20.0, 25), (30.0, 101)] | risers 3 | centre 30.0 mm
+PROF single_step diff 1.0 origin_z 25.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 125), (25.0, 76)] | risers 1 | centre 25.0 mm
+PROF single_step diff 0.0 origin_z 10.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 125), (10.0, 76)] | risers 1 | centre 10.0 mm
+PROF flat        diff 1.0 origin_z 0.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 201)] | risers 0 | centre 0.0 mm
+PROF flat        diff 0.0 origin_z 0.0 mm | plateaus edge->centre (height mm, length cm): [(0.0, 201)] | risers 0 | centre 0.0 mm
+MIX grid 10x10 tile origin z mm: flat/hill-or-0: 18, >0: 82, max 123.0; geoms 692
+## play check (verdict overrides reach the play env)
+CHK [FOOT_FRICTION=0.2,0.2,PUSH_INTERVAL=3,6,PUSH_SCALE=2.0,STAIRS_MIX=stairs2:0.5,stairs3:0.5,STEP_HEIGHT=0.025,0.025] origin z (env 0): 75.0 mm; friction range cfg (0.2, 0.2); push {'x': (-0.6, 0.6), 'y': (-0.6, 0.6)} interval (3.0, 6.0)
+CHK [FOOT_FRICTION=0.2,0.2,PUSH_INTERVAL=3,6,PUSH_SCALE=2.0,STAIRS_MIX=stairs2:0.5,stairs3:0.5,STEP_HEIGHT=0.025,0.025] foot geoms (priority>0) friction[:, 0] over envs: [0.2, 0.2]
+CHK [STAIRS_MIX=flat:1] origin z (env 0): 0.0 mm; friction range cfg (0.2, 1.3); push {'x': (-0.6, 0.6), 'y': (-0.6, 0.6)} interval (0.5, 1.0)
+CHK [STAIRS_MIX=flat:1] foot geoms (priority>0) friction[:, 0] over envs: [1.082, 1.082]
+CHK [X=none] origin z (env 0): 99.0 mm; friction range cfg (0.2, 1.3); push {'x': (-0.6, 0.6), 'y': (-0.6, 0.6)} interval (0.5, 1.0)
+CHK [X=none] foot geoms (priority>0) friction[:, 0] over envs: [0.724, 0.724]
+## probe
+train rc=0 in 116 s; card peak MiB (includes any other tenant): 7762
+export rc=0 size=793780
+## e2e legs
+[duckvelstairse2e] 18:15:06   train rc=124: iterations 16000 -> 16410 in 11 min (1.64 s/it), run 2026-10-23_18-04-01_duckvelstairse2e
+[duckvelstairse2e] 18:15:11 Donald healthy at end
+[duckvelstairse2e] 18:15:11 DONE, 1090 iterations still resumable
+LEG1 exit=3
+[duckvelstairse2e] 18:16:07   train rc=0: iterations 16410 -> 16430 in 0 min (2.25 s/it), run 2026-10-23_18-15-28_duckvelstairse2e
+[duckvelstairse2e] 18:16:17   export ok: /home/witcheer/Pollen/policies-ours/velstairse2e-2026-10-23-it16430.onnx
+[duckvelstairse2e] 18:16:22 Donald healthy at end
+[duckvelstairse2e] 18:16:22 DONE rc=0 manifest /home/witcheer/duckvelstairse2e-status.json
+LEG2 exit=0
+## proof item e2e (PROOF_N=1, test tag)
+[duckz8proof] 18:19:40 batches finished in 1 min: a:2 b:2 c:2  mp4, NO_CLIP 0
+VERDICT: NO GAIN
+[duckz8proof] 18:19:40 DONE rc=0 VERDICT: NO GAIN
