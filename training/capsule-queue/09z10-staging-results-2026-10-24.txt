@@ -1,0 +1,89 @@
+# 09z10 giant-ball kick staging results (as run on capsule 2026-10-24 21:40-22:45 CEST beside the sub10 bench leg; the proof-item e2e used n=1 test takes on the 40-iteration probe checkpoint, its VERDICT line is meaningless).
+# seed: duckkickbl 2026-09-28_14-10-20 model_13000, md5 7265ed9e527f1dcae6c0b99e9cd3c4ab (both copies). sub10 llama-server held 10.3-10.8 GB at 97-98% util during every probe.
+## install (bigkick-install-2026-10-24)
+lines before 10 after 10
+other reprs identical: yes (10 of 10)
+Mjlab-BallKick-Flat-MicroDuck False b776a8e50611
+Mjlab-BallKick-Flat-MicroDuck True e47e00a432fa
+Mjlab-BallKick-Flat-Backlash-MicroDuck False ca51d9470bf1
+Mjlab-BallKick-Flat-Backlash-MicroDuck True 6e755e11421e
+Mjlab-Velocity-Flat-Backlash-MicroDuck False 7ca0f9708e3a
+Mjlab-Velocity-Flat-Backlash-MicroDuck True 097017516354
+Mjlab-Velocity-Flat-Backlash-Stairs-MicroDuck False 994ee93e8e78
+Mjlab-Velocity-Flat-Backlash-Stairs-MicroDuck True e648380a1d27
+Mjlab-Roulade-Flat-MicroDuck False bd66a08d34b8
+Mjlab-Roulade-Flat-MicroDuck True bd66a08d34b8
+## seed-only feasibility sweep, ball travel from the start at 1 s / 2 s (1-env takes, standing spawn, no shoves, goal env, medians)
+r 0.07 m 0.06 tags ('base1', 'base2') n 32 travel@1s median 0.81 @2s median 1.24 [1.02..1.60]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+r 0.09 m 0.1 tags ('r09',) n 6 travel@1s median 0.66 @2s median 1.23 [1.21..1.24]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+r 0.105 m 0.135 tags ('r105',) n 6 travel@1s median 0.54 @2s median 1.12 [1.04..1.20]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+r 0.12 m 0.176 tags ('r12',) n 6 travel@1s median 0.47 @2s median 1.01 [0.93..1.14]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+r 0.15 m 0.275 tags ('s15a', 's15b') n 32 travel@1s median 0.36 @2s median 0.75 [0.57..0.93]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+r 0.15 m 0.275 tags ('r15',) n 6 travel@1s median 0.35 @2s median 0.74 [0.62..0.86]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+r 0.18 m 0.397 tags ('r18',) n 6 travel@1s median 0.27 @2s median 0.57 [0.43..0.69]  (note: r 0.07 runs had the 0.70 m goal at 1.2 m, r 0.09-0.18 the first goal builds; r 0.15 s15 = final goal 1.0 m at 1.4 m, soft net)
+## seed baseline on the giant ball, final env (proof-bk-a, camera D, 32 takes: 16 as bkna + 16 as bksa, both = the seed)
+a: new 0/8 vs seed 0/8  one-sided p=1.0000  two-sided p=1.0000  no-sample takes new 0 seed 0
+   new  : new  held 8/8 kicked 8/8 goal 8/8 power 0/8 median aim +4.8 deg, travel@1s 0.37 m @2s 0.79 m
+   seed : seed held 8/8 kicked 5/8 goal 7/8 power 0/8 median aim +5.8 deg, travel@1s 0.37 m @2s 0.77 m
+a: new 0/8 vs seed 0/8  one-sided p=1.0000  two-sided p=1.0000  no-sample takes new 0 seed 0
+   new  : new  held 8/8 kicked 8/8 goal 8/8 power 0/8 median aim +3.8 deg, travel@1s 0.34 m @2s 0.73 m
+   seed : seed held 8/8 kicked 7/8 goal 8/8 power 0/8 median aim +2.4 deg, travel@1s 0.34 m @2s 0.72 m
+## play check
+TRAIN rewards: {'ball_forward_velocity': 12.0, 'ball_speed_overshoot': -4.0} entities ['robot', 'ball']
+ball geom ball/ball_geom radius 0.15 rgba [0.1, 0.45, 1.0, 1.0]
+ball body mass 0.275 dof of ball body 6 (6 = free)
+goal geoms 11 goal bodies dofs [0] mocap [-1]
+goal world x range 1.400..1.800  y range -0.500..0.500
+after reset: robot xy (-0.000, 0.000) yaw -0.00 deg; ball (0.218, -0.032, 0.150)
+lateral term 0.47000011801719666 (expect 0.47)  forward term 0.5999999642372131 (expect 0.60)
+AIM_W=0: ball_lateral present = False 
+AIM_W=10: ball_lateral present = True -10.0
+default env, play False entities ['robot', 'ball'] rewards {'ball_forward_velocity': 12.0, 'ball_speed_overshoot': -4.0} reset_ball {'offset': (0.205, -0.042), 'noise_xy': 0.015, 'ball_radius': 0.15, 'asset_name': 'ball'}
+default env, play True entities ['robot', 'ball'] rewards {'ball_forward_velocity': 12.0, 'ball_speed_overshoot': -4.0} reset_ball {'offset': (0.205, -0.042), 'noise_xy': 0.015, 'ball_radius': 0.15, 'asset_name': 'ball'}
+## probes (final giant-ball cfg)
+7265ed9e527f1dcae6c0b99e9cd3c4ab  /home/witcheer/Pollen/microduck_rl/logs/rsl_rl/duckbigkick/2026-10-24_00-00-00_seed-kickbl-it13000/model_13000.pt
+=== 22:34:38 card: 10816 MiB, 98 %
+=== 22:34:38 probe 1: exact-argv new task, 64 envs
+probe1 rc=0
+train rc=0 in 15 s
+export rc=0 size=793752
+=== 22:35:01 probe 2: warm start 512 envs
+probe2 rc=0
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigkick/seed-it13000/model_13000.pt
+train rc=0 in 154 s; card peak MiB (includes any other tenant): 13001
+export rc=0 size=793756
+mean Iteration time 3.44696 s over 46
+                            Mean reward: 54.32
+   Episode_Reward/ball_forward_velocity: 5.3183
+    Episode_Reward/ball_speed_overshoot: 0.0000
+=== 22:37:42 probe 3: warm start 4096 envs
+probe3 rc=0
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigkick/seed-it13000/model_13000.pt
+train rc=0 in 196 s; card peak MiB (includes any other tenant): 19021
+export rc=0 size=793756
+mean Iteration time 4.41478 s over 46
+                            Mean reward: 59.12
+   Episode_Reward/ball_forward_velocity: 5.8036
+    Episode_Reward/ball_speed_overshoot: 0.0000
+=== 22:41:05 PROBES_END card: 10830 MiB
+## 4096-env probe reward climb (seed + 40 it): iteration, mean reward, forward term
+10 Mean reward: 49.06	 Episode_Reward/ball_forward_velocity: 3.9656
+20 Mean reward: 51.52	 Episode_Reward/ball_forward_velocity: 4.7316
+30 Mean reward: 55.36	 Episode_Reward/ball_forward_velocity: 5.2579
+40 Mean reward: 58.76	 Episode_Reward/ball_forward_velocity: 5.7383
+41 Mean reward: 59.12	 Episode_Reward/ball_forward_velocity: 5.8036
+## proof item e2e (n=1, hooks)
+[duckbkproof] 22:41:31 === launching proof-bk-a/b/c in parallel (cap 90 min) ===
+[duckbkproof] 22:42:33 batches finished in 1 min: a:2 b:2 c:2  mp4, NO_CLIP 0
+a: new 0/1 vs seed 0/1  one-sided p=1.0000  two-sided p=1.0000  no-sample takes new 0 seed 0
+   new  : new  held 1/1 kicked 1/1 goal 0/1 power 0/1 median aim -20.0 deg, travel@1s 0.62 m @2s 1.12 m
+   seed : seed held 1/1 kicked 1/1 goal 1/1 power 0/1 median aim +3.1 deg, travel@1s 0.39 m @2s 0.82 m
+b: new 0/1 vs seed 0/1  one-sided p=1.0000  two-sided p=1.0000  no-sample takes new 0 seed 0
+   new  : new  held 1/1 kicked 1/1 goal 1/1 power 0/1 median aim -15.2 deg, travel@1s 0.49 m @2s 1.04 m
+   seed : seed held 1/1 kicked 1/1 goal 1/1 power 0/1 median aim -2.6 deg, travel@1s 0.36 m @2s 0.76 m
+c: new 1/1 vs seed 1/1  one-sided p=1.0000  two-sided p=1.0000  no-sample takes new 0 seed 0
+   new  : new  held 1/1 kicked 1/1 median aim +60.6 deg, travel@1s 1.23 m @2s 2.52 m
+   seed : seed held 1/1 kicked 1/1 median aim +39.8 deg, travel@1s 1.14 m @2s 2.31 m
+VERDICT: NO GAIN
+[duckbkproof] 22:42:34 clips cut: NEW bkna-t1 d2=1.12 goal=0 aim=-20.0 (held 1/1, goal 0/1) SEED bksa-t1 d2=0.82 goal=1 aim=+3.1 (median d2 of 1 held seed takes 0.82) CUT_DONE NEW=bkna-t1 SEED=bksa-t1 GOAL=0 
+[duckbkproof] 22:42:34 DONE rc=0 VERDICT: NO GAIN

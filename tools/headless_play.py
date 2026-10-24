@@ -239,6 +239,13 @@ def _env_with_camera(cfg, **kw):
     if no_push:
         dropped = cfg.events.pop("push_robot", None) if isinstance(cfg.events, dict) else None
         print(f"[headless_play] no-push: push_robot {'dropped' if dropped is not None else 'not present'}", flush=True)
+        # BallKick (and any env with a push-magnitude curriculum) binds a curriculum term to the event by name and raises
+        # "Event term 'push_robot' not found" at env build once the event is gone (found 2026-10-24); drop those terms too.
+        if isinstance(cfg.curriculum, dict):
+            for cname, ct in list(cfg.curriculum.items()):
+                if (getattr(ct, "params", None) or {}).get("event_name") == "push_robot":
+                    cfg.curriculum.pop(cname)
+                    print(f"[headless_play] no-push: curriculum term {cname} dropped (bound to push_robot)", flush=True)
     if no_bounds:
         dropped = cfg.terminations.pop("out_of_terrain_bounds", None) if isinstance(cfg.terminations, dict) else None
         print(f"[headless_play] no-bounds: out_of_terrain_bounds {'dropped' if dropped is not None else 'not present'}", flush=True)
