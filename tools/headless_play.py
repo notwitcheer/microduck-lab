@@ -112,7 +112,9 @@ class HeadlessViewer:
                 return ""
             b = ball.data.root_link_pos_w[0]
             o = base.scene.terrain.env_origins[0]
-            return f" ball=({float(b[0]-o[0]):+.3f},{float(b[1]-o[1]):+.3f},{float(b[2]-o[2]):+.3f})"
+            # 2026-10-27: trunk xy relative to the env origin on every ball line (dribble verdicts need the ball-to-trunk gap; trunk=(x,y) is appended AFTER ball=(...), so older ball= parsers are unaffected)
+            t = robot.data.root_link_pos_w[0]
+            return f" ball=({float(b[0]-o[0]):+.3f},{float(b[1]-o[1]):+.3f},{float(b[2]-o[2]):+.3f}) trunk=({float(t[0]-o[0]):+.3f},{float(t[1]-o[1]):+.3f})"
         site_id = None
         if log_site:
             try:

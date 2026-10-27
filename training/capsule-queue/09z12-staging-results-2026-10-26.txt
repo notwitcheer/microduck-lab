@@ -1,0 +1,110 @@
+# 09z12 giant-ball AIM staging results (as run on capsule 2026-10-26 07:47-08:50 CET, free card, mercury subagent; every number is a log line, nothing re-typed).
+# seed: duckbigkick 2026-10-25_08-12-58 model_16000, md5 71eab7c2b8477e0a4023408dab316ba6 (both copies). card: Donald unloaded (2 MiB) at every probe; the sibling hsetprobe session held the card 08:13-08:17 and was waited out.
+## install (bigaim-install-2026-10-26): train + play cfg md5 of 6 tasks (incl. the Big task), before vs after the fork module and again after the weight default change
+lines before 12 after 12 after-w20 12
+before == after: identical
+before == after-w20: identical
+Mjlab-BallKick-Flat-MicroDuck False b776a8e50611
+Mjlab-BallKick-Flat-MicroDuck True e47e00a432fa
+Mjlab-BallKick-Flat-Backlash-MicroDuck False ca51d9470bf1
+Mjlab-BallKick-Flat-Backlash-MicroDuck True 6e755e11421e
+Mjlab-BallKick-Flat-Backlash-Big-MicroDuck False 631c69f01e7f
+Mjlab-BallKick-Flat-Backlash-Big-MicroDuck True d21c8c7bfc51
+Mjlab-Velocity-Flat-Backlash-MicroDuck False 7ca0f9708e3a
+Mjlab-Velocity-Flat-Backlash-MicroDuck True 097017516354
+Mjlab-Velocity-Flat-Backlash-Stairs-MicroDuck False 994ee93e8e78
+Mjlab-Velocity-Flat-Backlash-Stairs-MicroDuck True e648380a1d27
+Mjlab-Roulade-Flat-MicroDuck False bd66a08d34b8
+Mjlab-Roulade-Flat-MicroDuck True bd66a08d34b8
+## proof-bk-a reference aims (09z11, 15 takes, bkna): bkna held 15/15 goal 1/15 held&goal 1/15 power 9/15 held&power 9/15 in+-20deg 1/15 median aim -30.5 deg, travel@1s 0.96 m @2s 1.29 m
+## weight sweep (bigaim-sweep-2026-10-26.sh, log ~/Pollen/bigaim-sweep-2026-10-26.log): 200 warm-start iterations, 4096 envs, goal takes 6 per checkpoint
+=== 07:17:57 W=3: 200 warm-start iterations, 4096 envs ===
+W=3 train rc=0 in 258 s, card peak MiB 7508
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigaim-w3/seed-it16000/model_16000.pt
+mean Iteration time 1.2199 s over 201
+  it 16000 mean 3.31 fwd 0.2448 lateral -0.0310 overshoot -0.0085 fell_over 0.0000
+  it 16040 mean 78.98 fwd 11.0049 lateral -1.2087 overshoot -0.0517 fell_over 0.0417
+  it 16080 mean 76.85 fwd 10.8093 lateral -1.1263 overshoot -0.0445 fell_over 0.1667
+  it 16120 mean 78.67 fwd 10.8076 lateral -1.1563 overshoot -0.0357 fell_over 0.2083
+  it 16160 mean 78.55 fwd 10.8843 lateral -1.1390 overshoot -0.0481 fell_over 0.0417
+  it 16200 mean 77.56 fwd 10.8801 lateral -1.1694 overshoot -0.0370 fell_over 0.1250
+=== 07:22:15 W=8: 200 warm-start iterations, 4096 envs ===
+W=8 train rc=0 in 252 s, card peak MiB 7508
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigaim-w8/seed-it16000/model_16000.pt
+mean Iteration time 1.19637 s over 201
+  it 16000 mean 2.65 fwd 0.2446 lateral -0.0825 overshoot -0.0086 fell_over 0.0000
+  it 16040 mean 69.12 fwd 10.8635 lateral -3.0080 overshoot -0.0395 fell_over 0.1250
+  it 16080 mean 68.45 fwd 10.5256 lateral -2.5427 overshoot -0.0216 fell_over 0.1667
+  it 16120 mean 70.56 fwd 10.3942 lateral -2.3108 overshoot -0.0158 fell_over 0.0833
+  it 16160 mean 70.82 fwd 10.5437 lateral -2.3046 overshoot -0.0237 fell_over 0.0417
+  it 16200 mean 71.26 fwd 10.4619 lateral -2.2229 overshoot -0.0182 fell_over 0.0417
+=== 07:26:27 W=20: 200 warm-start iterations, 4096 envs ===
+W=20 train rc=0 in 252 s, card peak MiB 7508
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigaim-w20/seed-it16000/model_16000.pt
+mean Iteration time 1.20244 s over 201
+  it 16000 mean 1.06 fwd 0.2447 lateral -0.2062 overshoot -0.0085 fell_over 0.0000
+  it 16040 mean 43.72 fwd 10.9670 lateral -7.9354 overshoot -0.0600 fell_over 0.1250
+  it 16080 mean 53.83 fwd 8.9561 lateral -3.7178 overshoot -0.0019 fell_over 0.3333
+  it 16120 mean 62.19 fwd 8.2970 lateral -1.5596 overshoot -0.0002 fell_over 0.1250
+  it 16160 mean 68.56 fwd 9.3948 lateral -1.6039 overshoot -0.0003 fell_over 0.0417
+  it 16200 mean 67.45 fwd 9.6938 lateral -1.7362 overshoot -0.0007 fell_over 0.0833
+seed (bigkick 16000):
+ref held 6/6 goal 0/6 held&goal 0/6 power 4/6 held&power 4/6 in+-20deg 0/6 median aim -29.7 deg, travel@1s 0.97 m @2s 1.61 m
+W=3 +40 it:
+w3i40 held 6/6 goal 0/6 held&goal 0/6 power 5/6 held&power 5/6 in+-20deg 0/6 median aim -30.9 deg, travel@1s 0.97 m @2s 1.62 m
+W=3 +200 it:
+w3i200 held 6/6 goal 0/6 held&goal 0/6 power 3/6 held&power 3/6 in+-20deg 0/6 median aim -26.7 deg, travel@1s 0.93 m @2s 1.20 m
+W=8 +40 it:
+w8i40 held 6/6 goal 0/6 held&goal 0/6 power 2/6 held&power 2/6 in+-20deg 1/6 median aim -25.2 deg, travel@1s 0.91 m @2s 1.14 m
+W=8 +200 it:
+w8i200 held 6/6 goal 2/6 held&goal 2/6 power 0/6 held&power 0/6 in+-20deg 2/6 median aim -23.8 deg, travel@1s 0.90 m @2s 1.20 m
+W=20 +40 it:
+w20i40 held 6/6 goal 0/6 held&goal 0/6 power 5/6 held&power 5/6 in+-20deg 0/6 median aim -31.2 deg, travel@1s 0.95 m @2s 1.44 m
+W=20 +200 it:
+w20i200 held 6/6 goal 6/6 held&goal 6/6 power 6/6 held&power 6/6 in+-20deg 6/6 median aim -3.4 deg, travel@1s 0.76 m @2s 1.44 m
+## sweep W=20 intermediate checkpoints (6 goal takes each)
+w20i80 held 6/6 goal 5/6 held&goal 5/6 power 1/6 held&power 1/6 in+-20deg 6/6 median aim -7.9 deg, travel@1s 0.55 m @2s 1.17 m
+w20i120 held 6/6 goal 6/6 held&goal 6/6 power 6/6 held&power 6/6 in+-20deg 6/6 median aim -5.0 deg, travel@1s 0.67 m @2s 1.42 m
+w20i160 held 6/6 goal 6/6 held&goal 6/6 power 6/6 held&power 6/6 in+-20deg 6/6 median aim -2.7 deg, travel@1s 0.74 m @2s 1.45 m
+## final-cfg 41-iteration exact-argv probe checkpoint (model_16040, 4096 envs, no env var), 6 goal takes
+      p40-t1 held=1 goal=1 aim@1.5s= -17.8 d1=0.76 d2=1.13
+      p40-t2 held=1 goal=1 aim@1.5s= -14.5 d1=0.90 d2=1.21
+      p40-t3 held=1 goal=0 aim@1.5s= -24.4 d1=0.89 d2=1.09
+      p40-t4 held=1 goal=0 aim@1.5s= -30.2 d1=0.96 d2=2.08
+      p40-t5 held=1 goal=1 aim@1.5s= -16.9 d1=0.91 d2=1.14
+      p40-t6 held=1 goal=1 aim@1.5s= -11.7 d1=0.91 d2=1.44
+p40 held 6/6 goal 4/6 held&goal 4/6 power 2/6 held&power 2/6 in+-20deg 4/6 median aim -17.3 deg, travel@1s 0.90 m @2s 1.17 m
+## probes on the final cfg (bigaim-probes-2026-10-26.sh)
+71eab7c2b8477e0a4023408dab316ba6  /home/witcheer/Pollen/microduck_rl/logs/rsl_rl/duckbigaim/2026-10-26_00-00-00_seed-bigkick-it16000/model_16000.pt
+no MICRODUCK_ env set
+=== 08:38:27 card: 2 MiB, 0 %
+=== 08:38:27 probe 1: exact-argv new task, 64 envs
+probe1 rc=0
+train rc=0 in 10 s
+export rc=0 size=793750
+=== 08:38:44 probe 2: warm start 512 envs
+probe2 rc=0
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigaim/seed-it16000/model_16000.pt
+train rc=0 in 37 s; card peak MiB (includes any other tenant): 2175
+export rc=0 size=793754
+mean Iteration time 0.707609 s over 46
+                            Mean reward: 42.88
+   Episode_Reward/ball_forward_velocity: 11.1609
+    Episode_Reward/ball_speed_overshoot: -0.0577
+            Episode_Reward/ball_lateral: -7.8065
+=== 08:39:28 probe 3: warm start 4096 envs
+probe3 rc=0
+[INFO]: Loading model checkpoint from: logs/rsl_rl/probe-bigaim/seed-it16000/model_16000.pt
+train rc=0 in 61 s; card peak MiB (includes any other tenant): 8163
+export rc=0 size=793754
+mean Iteration time 1.26109 s over 46
+                            Mean reward: 44.03
+   Episode_Reward/ball_forward_velocity: 10.9693
+    Episode_Reward/ball_speed_overshoot: -0.0579
+            Episode_Reward/ball_lateral: -7.8416
+=== 08:40:36 PROBES_END card: 2 MiB
+## e2e of the proof item with test hooks (n=1, tag e2e, the W=20 +200 sweep checkpoint; its VERDICT line is meaningless at n=1)
+[duckbaproof] 08:43:27 === launching proof-ba-a/b/c in parallel (cap 90 min) ===
+[duckbaproof] 08:44:27 batches finished in 1 min: a:2 b:2 c:2  mp4, NO_CLIP 0
+[duckbaproof] 08:44:29 clips cut: NEW bana-t1 d2=1.43 goal=1 aim=+0.3 (held 1/1, goal 1/1) REF bkra-t1 d2=1.63 goal=0 aim=-32.4 (median aim of 1 held reference takes -32.4) CUT_DONE NEW=bana-t1 REF=bkra-t1 GOAL=1 RGOAL=0 
+[duckbaproof] 08:44:29 DONE rc=0 VERDICT: NO GAIN
