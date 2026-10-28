@@ -3,7 +3,14 @@
 usage: python3 gm-score-2026-10-28.py --dir <dir> <prefix> [--mode gale|moon]     per-take table + summary of one policy's takes
 definitions (the settle window is the first 0.5 s; the take runs episode_s + 0.1 s, rows at t >= episode_s are the NEXT episode after the time-out RESET and are dropped):
   fell     = a RESET at t < episode_s - 0.3, OR total trunk tilt > 60 deg at any step (the cond_probe fall definition, so the seed probes stay comparable).
-  held     = not fell.
+  held     = not fell AND tall (AMENDED 2026-10-28 ~16:40 CET, before any training of 09z18/09z20, after the 09z16 hop
+             reward hack: that policy scored "both feet in the air" while resting on its knees, trunk 84-91 mm).
+  tall     = median trunk height z over t >= 0.5 s >= 0.9 * Z_STAND AND the share of those steps with z < 0.8 * Z_STAND <= 0.10.
+             Z_STAND = 119.7 mm = the seed (walk-flat v2) on the stock Earth walk, median z over 0.5-1.5 s, 18 takes
+             (gm-probe/sweep1+2 m-flat-9.81). check before freezing: every HELD seed take in gm-probe (sweep1 + sweep2, all
+             gale/moon/Mars/Earth conditions: 120 of the 228 seed takes did not fall, all 120 pass tall) and every held e2e take passes tall; the 15 hop takes of
+             proof-hop-a-2026-10-27 all fail it (median z 87-90 mm, 98-100% of steps under 95.8 mm). a whole-take MINIMUM
+             rule was rejected: the seed's normal Earth gait dips to 103.9 mm, under 0.9 * Z_STAND.
   fwd_end  = mean trunk progress along the heading at reset (m) over the last 0.5 s of the take; fwd_max = its maximum.
   lean     = forward pitch from the projected gravity (deg, + nose down); lean_med = median over the last 4 s of the take, lean_max = the largest 0.5 s moving average over the take.
   wind_held = the largest wind force (N) at which the duck was still upright (== the wind at the take's end for a held take).
@@ -15,6 +22,7 @@ from math import comb
 L = re.compile(r'\[gm\] k=\s*(\d+) t=\s*([\d.]+) fwd=\s*([-+\d.]+) lat=\s*([-+\d.]+) z=\s*([-\d.]+) tilt=\s*([\d.]+) lean=\s*([-+\d.]+) air=\s*(-?\d) tq=([\d.]+) wind=\s*([\d.]+)')
 R = re.compile(r'RESET at t=\s*([\d.]+)')
 SETTLE_S = 0.5; FALL_TILT = 60.0; FLIGHT_STEPS = 4
+Z_STAND = 119.7; TALL_MED = 0.9; LOW_Z = 0.8; LOW_FRAC_MAX = 0.10
 
 
 def take(f, ep):
@@ -39,7 +47,10 @@ def take(f, ep):
     if cur: runs.append(cur)
     fl = [x for x in runs if len(x) >= FLIGHT_STEPS]
     up = [r for r in rows if r['tilt'] <= FALL_TILT]
-    return dict(fell=fell, held=not fell, fall_t=(min([r['t'] for r in rows if r['tilt'] > FALL_TILT] + resets) if fell else float('nan')),
+    zs = [r['z'] for r in rows if r['t'] >= SETTLE_S]
+    medz = statistics.median(zs); lowfrac = sum(1 for z in zs if z < LOW_Z * Z_STAND) / len(zs)
+    tall = medz >= TALL_MED * Z_STAND and lowfrac <= LOW_FRAC_MAX
+    return dict(fell=fell, held=(not fell) and tall, tall=tall, medz=medz, lowfrac=lowfrac, fall_t=(min([r['t'] for r in rows if r['tilt'] > FALL_TILT] + resets) if fell else float('nan')),
                 fwd_end=statistics.mean(r['fwd'] for r in end), fwd_max=max(r['fwd'] for r in rows), lat_end=statistics.mean(r['lat'] for r in end),
                 lean_med=statistics.median(r['lean'] for r in last4), lean_max=max(ma) if ma else float('nan'),
                 wind_held=max([r['wind'] for r in up] or [0.0]), tq=max(r['tq'] for r in rows), n_flights=len(fl),
@@ -72,11 +83,12 @@ def load(d, pre, ep):
 
 def row(x):
     return (f'  {x["name"]:>10} held={int(x["held"])} fall_t={x["fall_t"]:5.1f} fwd_end={x["fwd_end"]:+6.2f} fwd_max={x["fwd_max"]:+6.2f} lat_end={x["lat_end"]:+6.2f} lean_med={x["lean_med"]:+5.1f} '
-            f'lean_max={x["lean_max"]:+5.1f} wind_held={x["wind_held"]:4.2f}N flights={x["n_flights"]} bound={x["bound_ms"]:3d}ms air={x["air_frac"]:.2f} tq={x["tq"]:.3f}')
+            f'lean_max={x["lean_max"]:+5.1f} wind_held={x["wind_held"]:4.2f}N flights={x["n_flights"]} bound={x["bound_ms"]:3d}ms air={x["air_frac"]:.2f} tq={x["tq"]:.3f} '
+            f'fell={int(x["fell"])} tall={int(x["tall"])} medz={x["medz"]:.1f}mm low={x["lowfrac"]:.2f}')
 
 
 def summary(nm, xs):
-    return (f'{nm}: held {sum(x["held"] for x in xs)}/{len(xs)} | median fwd_end {med([x["fwd_end"] for x in xs]):+.2f} m, median lean_med {med([x["lean_med"] for x in xs]):+.1f} deg, '
+    return (f'{nm}: held {sum(x["held"] for x in xs)}/{len(xs)} (not fell {sum(not x["fell"] for x in xs)}, tall {sum(x["tall"] for x in xs)}, median trunk {med([x["medz"] for x in xs]):.1f} mm) | median fwd_end {med([x["fwd_end"] for x in xs]):+.2f} m, median lean_med {med([x["lean_med"] for x in xs]):+.1f} deg, '
             f'median lean_max {med([x["lean_max"] for x in xs]):+.1f} deg | median wind_held {med([x["wind_held"] for x in xs]):.2f} N | takes with a flight >= 80 ms {sum(x["n_flights"] > 0 for x in xs)}/{len(xs)}, '
             f'median air fraction {med([x["air_frac"] for x in xs]):.3f}, longest {max(x["bound_ms"] for x in xs)} ms')
 

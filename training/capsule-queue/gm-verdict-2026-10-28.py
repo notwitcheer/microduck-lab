@@ -8,6 +8,10 @@ frozen BEFORE any take of the 3,000-iteration policy existed (vault 60-robotics/
   B  reported, not in the verdict: gale = the same wind with the maker's play shoves, 10 takes per policy; moon = Mars gravity 3.71, no shoves, 10 takes per policy (same success rule). plus bounds (flights >= 80 ms), lean, wind held.
   C  no loss, stock walk task on Earth with the maker's play shoves, forced vx 0.25, 20 s, 10 takes per policy: held counts, two-sided exact Fisher; a LOSS = p < 0.05 with new lower.
   VERDICT = GAIN iff A p < 0.05 and no loss on C, else NO GAIN (the failing part named). INCOMPLETE until every batch has its take count (A 15 each, C 10 each).
+AMENDMENT 2026-10-28 ~16:40 CET (operator yes in the GPU thread, BEFORE any training of 09z18/09z20, i.e. before any take of either 3,000-iteration
+  policy existed): "held" in A, B and C now also requires the trunk to stay tall (gm-score-2026-10-28.py `tall`: median trunk z >= 0.9 x 119.7 mm and
+  <= 10% of steps under 0.8 x 119.7 mm, after the 0.5 s settle). reason: the 09z16 hop scored GAIN by resting on its knees with both feet up (trunk
+  84-91 mm), a loophole the same success rule would leave open here (a crawl with tilt <= 60 deg counted as held). the seed's held takes all pass it.
 env hooks (e2e only): PROOF_TAG, PROOF_N (A take count, C/B n = min(10, PROOF_N)), GM_FWD_MIN.
 """
 import importlib.util, os, sys
