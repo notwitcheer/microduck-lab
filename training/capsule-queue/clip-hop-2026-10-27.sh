@@ -50,12 +50,16 @@ nice -n 19 $FF -y -loglevel error \
  -ss $SS2 -t 1.2 -i $B/$NEW.mp4 -loop 1 -t 4.8 -i $D/cap-slow.png \
  -filter_complex "[0:v]pad=1280:844:0:0:black,setsar=1[a0];[a0][1:v]overlay=0:720,fps=50,format=yuv420p[a];[2:v]setpts=4.0*(PTS-STARTPTS),pad=1280:844:0:0:black,setsar=1[b0];[b0][3:v]overlay=0:720:shortest=1,fps=50,format=yuv420p[b];[a][b]concat=n=2:v=1:a=0[o]" \
  -map "[o]" -c:v libx264 -preset fast -crf 20 -movflags +faststart -an $D/hop-x.mp4
+# picker rule (2026-10-28, owed since the 09z14 dribble NO GAIN): the before/after is cut ONLY when the verdict is GAIN (read from the item's score file); on NO GAIN the hero alone is cut.
+SC=$P/proof-hop-score.txt; [ -s "$SC" ] || SC=$P/proof-hop-score-$TAG.txt
+if grep -q '^VERDICT: GAIN' "$SC" 2>/dev/null; then
 nice -n 19 $FF -y -loglevel error \
  -ss 0 -t 3.2 -i $BR/$REF.mp4 -loop 1 -t 3.2 -i $D/cap-before.png \
  -ss $SS1 -t 3.2 -i $B/$NEW.mp4 -loop 1 -t 3.2 -i $D/cap-after.png \
  -ss $SS2 -t 1.2 -i $B/$NEW.mp4 -loop 1 -t 4.8 -i $D/cap-slow.png \
  -filter_complex "[0:v]pad=1280:844:0:0:black,setsar=1[a0];[a0][1:v]overlay=0:720,fps=50,format=yuv420p[a];[2:v]pad=1280:844:0:0:black,setsar=1[b0];[b0][3:v]overlay=0:720,fps=50,format=yuv420p[b];[4:v]setpts=4.0*(PTS-STARTPTS),pad=1280:844:0:0:black,setsar=1[c0];[c0][5:v]overlay=0:720:shortest=1,fps=50,format=yuv420p[c];[a][b][c]concat=n=3:v=1:a=0[o]" \
  -map "[o]" -c:v libx264 -preset fast -crf 20 -movflags +faststart -an $D/hop-x-beforeafter.mp4
-for f in hop-x hop-x-beforeafter; do ls -la $D/$f.mp4; { $FF -hide_banner -i $D/$f.mp4 2>&1 || true; } | grep -E "Duration|Stream" | head -n 2 || true; done
+else rm -f $D/hop-x-beforeafter.mp4; echo "BEFOREAFTER skipped: verdict is not GAIN (picker rule, score file $SC)"; fi
+for f in hop-x hop-x-beforeafter; do [ -f $D/$f.mp4 ] || continue; ls -la $D/$f.mp4; { $FF -hide_banner -i $D/$f.mp4 2>&1 || true; } | grep -E "Duration|Stream" | head -n 2 || true; done
 for t in 0.3 1.0 3.6 5.0; do $FF -loglevel error -y -ss $t -i $D/hop-x.mp4 -frames:v 1 $D/still-hero-$t.png; done
 echo "CUT_DONE NEW=$NEW REF=$REF SUCCESS=$OK"
