@@ -1,0 +1,9 @@
+[verdict] A A-s11.log: success 1/16, touched 15
+[verdict] A A-s12.log: success 0/16, touched 16
+[verdict] A A-s13.log: success 1/16, touched 15
+[verdict] B B-s11.log: success 14/16, touched 2
+[verdict] B B-s12.log: success 13/16, touched 3
+[verdict] B B-s13.log: success 14/16, touched 2
+[verdict] control (no boulder): tall 16/16
+A (no reflex): 2/48   B (Hermes reflex): 41/48   one-sided Fisher p = 2.18e-17
+VERDICT: GAIN

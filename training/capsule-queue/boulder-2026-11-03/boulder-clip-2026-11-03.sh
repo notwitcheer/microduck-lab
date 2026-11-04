@@ -29,7 +29,7 @@ H=$(echo "$PK" | sed -n 's/^HERO=//p'); B=$(echo "$PK" | sed -n 's/^BEFORE=//p')
 [ "$H" != NONE ] && [ -n "$H" ] || { echo "no hero take (no clean Hermes take): no clips"; exit 4; }
 cp $C/H$H.mp4 $C/boulder-x-low.mp4; cp $C/H$H-plan.mp4 $C/boulder-x-plan.mp4
 if [ -f "$SCORE" ] && grep -q '^VERDICT: GAIN' "$SCORE" && [ "$B" != NONE ] && [ -n "$B" ]; then
-  $FF -y -loglevel error -i $C/N$B-plan.mp4 -i $C/H$H-plan.mp4 -filter_complex "[0:v][1:v]concat=n=2:v=1:a=0[v]" -map "[v]" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart $C/boulder-x-beforeafter.mp4 \
+  $FF -nostdin -y -loglevel error -i $C/N$B-plan.mp4 -i $C/H$H-plan.mp4 -filter_complex "[0:v][1:v]concat=n=2:v=1:a=0[v]" -map "[v]" -c:v libx264 -crf 20 -pix_fmt yuv420p -movflags +faststart $C/boulder-x-beforeafter.mp4 </dev/null \
     && echo "BEFOREAFTER cut: N$B then H$H" || echo "BEFOREAFTER cut FAILED"
 else
   echo "BEFOREAFTER skipped: verdict is not GAIN (or no flattened take): hero only"
