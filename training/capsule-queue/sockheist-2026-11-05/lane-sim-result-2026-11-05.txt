@@ -1,0 +1,62 @@
+ITEM gate NOT_BEFORE=1794006000}
+B1 (Fri 01:10-06:10) end=1793941800  B2 (Fri 14:10-17:10) end=1793981400  Sat 00:10 weekend block end=1794178799
+
+=== A. Fri 14:10 block, hop3 done earlier in the block (09z28 still queued, tried once the drain walks past 09z27), WITH the gate
+--- A1 Fri 16:25, hop3 trained in B2 (ld=B2), 88/89 queued
+    NOT_BEFORE gate: Sat 2026-11-07 00:00 CET (1794006000), HOLDS now: a real run exits 3 in seconds, no drain, no lane record
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    NOT_BEFORE Sat 00:00 not reached, exit 3 (stays queued, nothing started)
+rc=3
+    state: before [ld=1793981400; ly=1793941800]  after [ld=1793981400; ly=1793941800]  -> UNCHANGED
+--- A2 Fri 14:10:05, 09z28 reached BEFORE hop3 trained (cannot happen by sort; worst case anyway), state = real now-state
+    NOT_BEFORE gate: Sat 2026-11-07 00:00 CET (1794006000), HOLDS now: a real run exits 3 in seconds, no drain, no lane record
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    NOT_BEFORE Sat 00:00 not reached, exit 3 (stays queued, nothing started)
+rc=3
+    state: before [ld=1793895000; ly=1793808600]  after [ld=1793895000; ly=1793808600]  -> UNCHANGED
+--- A3 Fri 01:10 B1 bench-by-alternation, 88/89 queued
+    NOT_BEFORE gate: Sat 2026-11-07 00:00 CET (1794006000), HOLDS now: a real run exits 3 in seconds, no drain, no lane record
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    NOT_BEFORE Sat 00:00 not reached, exit 3 (stays queued, nothing started)
+rc=3
+    state: before [ld=1793895000; ly=1793808600]  after [ld=1793895000; ly=1793808600]  -> UNCHANGED
+
+=== B. CONTROL: the same Fri 16:25 tail WITHOUT the gate (NOT_BEFORE=0): what a plain 09z28 would do
+--- B1 no gate, hop3 trained in B2 (ld=B2)
+    NOT_BEFORE gate: open (0)
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    lane: duck block (continuing after another duck item)
+    SIM: the lane check passed, the item would start training now (stopping here)
+rc=0
+    state: before [ld=1793981400; ly=1793941800]  after [ld=1793981400; ly=1793941800]  -> UNCHANGED
+--- B2 no gate, Fri 14:10 with the real now-state and a bench item queued
+    NOT_BEFORE gate: open (0)
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    lane: previous block was duck, yielding this block to the bench (exit 3, resumable)
+rc=3
+    state: before [ld=1793895000; ly=1793808600]  after [ld=1793895000; ly=1793981400]  -> CHANGED
+
+=== C. first weekend block: Sat 00:10 runner fire, WITH the gate (open at Sat 00:00)
+--- C1 Sat 00:10, hop3 done, 88-91 still queued
+    NOT_BEFORE gate: open (1794006000)
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    lane: weekend block, no alternation
+    SIM: the lane check passed, the item would start training now (stopping here)
+rc=0
+    state: before [ld=1793981400; ly=1793941800]  after [ld=1793981400; ly=1793941800]  -> UNCHANGED
+--- C2 Sat 00:10, hop3 NOT done (09z27 not finished) and bench queued
+    NOT_BEFORE gate: open (1794006000)
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    lane: weekend block, no alternation
+    SIM: the lane check passed, the item would start training now (stopping here)
+rc=0
+    state: before [ld=1793981400; ly=1793941800]  after [ld=1793981400; ly=1793941800]  -> UNCHANGED
+--- C3 gate probe: Fri 23:55 (a runner fire cannot happen then, but the gate must hold)
+    NOT_BEFORE gate: Sat 2026-11-07 00:00 CET (1794006000), HOLDS now: a real run exits 3 in seconds, no drain, no lane record
+    run hs1 (microduck-challenges seed 1): RUN (1000 iterations left, 4096 envs; fresh/none at 0)
+    NOT_BEFORE Sat 00:00 not reached, exit 3 (stays queued, nothing started)
+rc=3
+    state: before [ld=1793981400; ly=1793941800]  after [ld=1793981400; ly=1793941800]  -> UNCHANGED
+
+drain order at Sat 00:10 (ls | sort, C1): 09z28-duck-sockheist.sh 09z29-duck-proof-sockheist.sh 88-units-orbit.sh 89-ripple-65b-hermes-repo.sh 90-astra-stop-q4.sh 91-glb-3d-coder.sh 
+REAL_STATE_UNCHANGED
