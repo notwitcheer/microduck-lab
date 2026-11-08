@@ -1,0 +1,12 @@
+HILL PROOF 2026-11-08: rules frozen in the vault PREREG.md. Pollen reference re-scored here: 5.87 s at 0.55 m/s (5/5, clean True), pin 5.87 s
+HEADLINE hc1: PICK it750 local score 5.653 s at 0.6 m/s (5/5, clean); CHECK25 finished 23/25, clean 23/25, mean 9.941 s; unscored seeds 6-25 mean 11.014 s (n=20); raw best (any tilt) it750 5.653 s clean=True; meets bar (score <= 5.869 s, CHECK finishes >= 24, clean >= 24, unscored mean <= 5.872 s): no
+HEADLINE hc2: PICK it1000 local score 4.931 s at 0.6 m/s (5/5, clean); CHECK25 finished 25/25, clean 25/25, mean 4.954 s; unscored seeds 6-25 mean 4.960 s (n=20); raw best (any tilt) it1000 4.931 s clean=True; meets bar (score <= 5.869 s, CHECK finishes >= 24, clean >= 24, unscored mean <= 5.872 s): yes
+HEADLINE hc3: PICK it1000 local score 5.622 s at 0.6 m/s (5/5, clean); CHECK25 finished 25/25, clean 25/25, mean 5.618 s; unscored seeds 6-25 mean 5.617 s (n=20); raw best (any tilt) it1000 5.622 s clean=True; meets bar (score <= 5.869 s, CHECK finishes >= 24, clean >= 24, unscored mean <= 5.872 s): yes
+AUDIT (part A, live board re-scored on 25 starts): 129 of 133 rows re-scored, 129 match the board row; top 30: 25 are FRAGILE (fewer than 10 of the 20 unscored starts finish; median 0 of 20), 30 tip past 60 degrees in a scored seed; best row that holds up on 25 starts (>= 24/25 finish and >= 24 clean): board rank 72, 0.926 s mean of 25 (board 0.936 s); AUDIT HOLDS (>= 10 fragile rows in the top 30)
+HEADLINE PICK: hc2 it1000 at 4.931 s (Pollen reference 5.87 s)
+RAW BEST (any tilt, reported): hc2 it1000 4.931 s, clean=True
+REPLICATION: 2 of 3 headline seeds meet the bar (hc2, hc3)
+VARIANT (reported only): none defined
+LIVE BOARD at 2026-11-08 15:18 UTC: 4.931 s would take rank 111 of 134 rows (board has 133 rows, 42 users, top 0.737 s, median 0.887 s, slowest 60.000 s). no promise: the board moves and many top rows only work on the five scored starts, and this is a local score, not an entry
+HONEST LADDER (audited rows ranked by mean of 25 starts): 4.954 s would take place 22 of 130
+VERDICT: GAIN

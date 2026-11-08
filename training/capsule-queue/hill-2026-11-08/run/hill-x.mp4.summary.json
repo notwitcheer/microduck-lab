@@ -1,0 +1,33 @@
+{
+ "clip": "clips/hill-x.mp4",
+ "frames": 1141,
+ "seconds": 45.6,
+ "ffmpeg_rc": 0,
+ "audio_mux_rc": 0,
+ "mock": false,
+ "verdict": "GAIN",
+ "audit_holds": true,
+ "title": "25 of the top 30 rows on the Hill Climb board finish fewer than half of 20 starts the board never scores",
+ "segments": [
+  [
+   "card",
+   0,
+   200
+  ],
+  [
+   "hero_scored",
+   200,
+   389
+  ],
+  [
+   "hero_fresh",
+   389,
+   588
+  ],
+  [
+   "ours",
+   588,
+   741
+  ]
+ ]
+}
