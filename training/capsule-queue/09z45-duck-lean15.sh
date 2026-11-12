@@ -8,12 +8,12 @@
 # logs/rsl_rl/ducklean15/2026-10-28_00-00-00_seed-velbl-it7000/ before the run.
 # PRE-REGISTRATION: vault 60-robotics/microduck/09z42-duck-lean-status.md RE-CHECK section. 12.6 deg bar unchanged, n=10 sweep, a re-check, not a new verdict.
 # checkpoints every 250 it; proof = 09z46-duck-proof-lean15.sh (CPU, same block).
-# CARD HARD STOP 04:10 CET (ITEM_HARD_STOP_EPOCH=1794453000) so the CPU proof has the rest of the 01:10-06:10 block; the block id NL_HARD_STOP_EPOCH is untouched.
+# CARD HARD STOP Thu 11-12 16:20 CET (ITEM_HARD_STOP_EPOCH=1794496800, re-gated 2026-11-12 from Thu 04:10 after the 01:10 block yielded) so the CPU proof has the rest of the 14:10-17:10 block; NL_HARD_STOP_EPOCH untouched.
 SKILL=lean15
 MANIFEST=/home/witcheer/ducklean15-status.json
 TASK=Mjlab-Velocity-Flat-Backlash-Lean-MicroDuck
 TARGET_IT=${TARGET_IT:-13000}
 SAVE_EVERY=250
 export MICRODUCK_LEAN_W=1.5
-ITEM_HARD_STOP_EPOCH=1794453000
+ITEM_HARD_STOP_EPOCH=1794496800
 . /home/witcheer/Pollen/duck-train-body.sh
